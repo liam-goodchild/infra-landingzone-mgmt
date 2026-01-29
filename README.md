@@ -1,164 +1,132 @@
+# Landing Zone Management Infrastructure
+
+## Purpose
+
+This repository defines the management deployment for the Azure Landing Zone, including monitoring resources and Azure Monitor Baseline Alerts (AMBA).
+
+The goal is to establish a consistent, policy-driven monitoring foundation across the Azure environment.
+
+This repository:
+
+- Deploys Azure Monitor Baseline Alerts across the management group hierarchy
+- Manages RBAC groups and role assignments for governance
+- Provides multi-environment support (development and production)
+- Enforces standardised tagging and naming conventions
+
+---
+
+## Architecture Overview
+
+This deployment targets the following management group hierarchy:
+
+```
+Sky Haven (root)
+├── Platform
+│   ├── Connectivity
+│   ├── Identity
+│   ├── Management
+│   ├── Security
+│   └── Shared
+├── Landing Zones
+├── Decommissioned
+└── Sandbox
+```
+
+### Components Deployed
+
+| Component | Description |
+|-----------|-------------|
+| **AMBA Policies** | Baseline monitoring policies applied to management groups |
+| **Alert Resource Group** | Dedicated resource group for alert resources |
+| **User-Assigned Managed Identity** | Identity for AMBA operations |
+| **RBAC Groups** | Security groups with Owner, Contributor, and Reader roles |
+| **Action Groups** | Email notification channels for alerts |
+
+---
+
+## AMBA Integration
+
+Azure Monitor Baseline Alerts are deployed via the ALZ architecture module, applying policies to the following archetypes:
+
+- `amba_root` - Root management group policies
+- `amba_platform` - Platform management group policies
+- `amba_landing_zones` - Landing zone baseline alerts
+- `amba_connectivity` - Network connectivity monitoring
+- `amba_identity` - Identity and IAM monitoring
+- `amba_management` - Management plane monitoring
+
+### Alert Opt-Out
+
+Resources can opt-out of monitoring via the `MonitorDisable` tag with the following values:
+- `true`
+- `Test`
+- `Dev`
+- `Sandbox`
+
+---
+
+## Environment Configuration
+
+### Naming Convention
+
+| Format | Pattern | Example |
+|--------|---------|---------|
+| Long | `{project}-mgmt-{env}-{location}-{resource}-{instance}` | `sh-mgmt-dev-uks-alerts-rg-01` |
+| Short | `{project}mgmt{env_short}{location_short}{resource}{instance}` | `shmgmtNuks` |
+
+### Environments
+
+| Environment | Location | AMBA Enabled |
+|-------------|----------|--------------|
+| Development | UK South | No |
+| Production | UK South | Yes |
+
+---
+
+## CI/CD Pipelines
+
+| Pipeline | Trigger | Purpose |
+|----------|---------|---------|
+| `ci-terraform.yaml` | Pull Requests | Validation, linting, and plan |
+| `cd-terraform.yaml` | Commits to main | Production deployment with versioning |
+| `dev-terraform.yaml` | Manual | Development testing |
+| `destroy-terraform.yaml` | Manual | Infrastructure teardown |
+
+### Pipeline Stages
+
+**CI Pipeline:**
+1. Super-Linter and Prettier validation
+2. Checkov security scanning
+3. Terraform documentation generation
+4. Terraform plan
+
+**CD Pipeline:**
+1. Terraform plan
+2. Terraform apply
+3. Semantic version tagging
+
+---
+
+## State Management
+
+| Environment | Resource Group | Storage Account | Container |
+|-------------|----------------|-----------------|-----------|
+| Development | `sh-mgmt-dev-uks-tf-rg-01` | `shmgmtdevukstfst01` | `infra-landingzone-mgmt` |
+| Production | `sh-mgmt-prd-uks-tf-rg-01` | `shmgmtprdukstfst01` | `infra-landingzone-mgmt` |
+
+---
+
+## Terraform Documentation
+
 <!-- prettier-ignore-start -->
 <!-- textlint-disable -->
-
-# Repository Setup Standards
-
-This document defines the standard for setting up a new repository from this template.
-
-The primary objective is to ensure all repositories maintain consistent configuration, security settings, and documentation from the outset.
-
-- Ensures security features are enabled from day one
-- Maintains consistent branch protection across all repositories
-- Provides a repeatable, standardised setup process
-- Reduces configuration drift between projects
-- Enables automated documentation generation
-
----
-
-## 1. Set Default Branch
-
-In GitHub, set the default branch to:
-
-- `main`
-
----
-
-## 2. Enable Security Settings
-
-Enable the following security features on the repository:
-
-- Security advisories
-- Dependabot
-- Code scanning
-- Secret scanning
-
----
-
-## 3. Import Branch Ruleset
-
-Import the following JSON as a **branch ruleset**:
-
-```json
-{
-  "id": 12143210,
-  "name": "main-branch-protection",
-  "target": "branch",
-  "source_type": "Repository",
-  "source": "liam-goodchild/docs-engineering-standards",
-  "enforcement": "active",
-  "conditions": {
-    "ref_name": {
-      "exclude": [],
-      "include": [
-        "~DEFAULT_BRANCH"
-      ]
-    }
-  },
-  "rules": [
-    {
-      "type": "deletion"
-    },
-    {
-      "type": "non_fast_forward"
-    },
-    {
-      "type": "pull_request",
-      "parameters": {
-        "required_approving_review_count": 0,
-        "dismiss_stale_reviews_on_push": false,
-        "required_reviewers": [],
-        "require_code_owner_review": false,
-        "require_last_push_approval": false,
-        "required_review_thread_resolution": false,
-        "allowed_merge_methods": [
-          "merge",
-          "squash",
-          "rebase"
-        ]
-      }
-    }
-  ],
-  "bypass_actors": []
-}
-```
-
----
-
-## 4. Rename Repository
-
-Rename the repository using the following AI prompt:
-
-```text
-The repository will contain [description].
-Suggest a repository name following the naming convention at:
-https://raw.githubusercontent.com/liam-goodchild/docs-engineering-standards/main/repo-standards/repo-naming/README.md
-```
-
----
-
-## 5. Create CI/CD Pipelines, Service Principals and Service Connections
-
-Create the CI/CD pipelines in the relevant folder within Azure DevOps. Create the necessary service principals and service connections and ensure appropriate RBAC is granted.
-
----
-
-## 6. Update Pipeline Placeholders
-
-Update placeholder container and service connection names in the various pipelines with the correct values.
-
----
-
-## 7. Generate README
-
-Once the code in the repository is in a working state, generate a README using the following AI prompt:
-
-```text
-The repository is for [description of your project].
-
-Generate a README for my new repository following the template at:
-https://raw.githubusercontent.com/liam-goodchild/docs-engineering-standards/main/readme-standards/README.md
-
-Parse the repo to get a better understanding of the code but do not create any Terraform-specific information as this is automatically injected via TF Docs. The template README contains the block that should be put at the end to ensure Terraform documentation is injected.
-```
+<!-- BEGIN_TF_DOCS -->
+<!-- END_TF_DOCS -->
+<!-- textlint-enable -->
+<!-- prettier-ignore-end -->
 
 ---
 
 ## Summary
 
-Following these steps ensures your repository is properly configured with security features, branch protection, CI/CD pipelines, and documentation standards from the start.
-
-## Placeholder Terraform Documentation
-
-<!-- BEGIN_TF_DOCS -->
-## Requirements
-
-| Name | Version |
-|------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.0, < 2.0 |
-| <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | >= 4.0, < 5.0 |
-| <a name="requirement_null"></a> [null](#requirement\_null) | >= 3.0, < 4.0 |
-
-## Resources
-
-No resources.
-
-## Modules
-
-No modules.
-
-## Inputs
-
-| Name | Description | Type | Default | Required |
-|------|-------------|------|---------|:--------:|
-| <a name="input_environment"></a> [environment](#input\_environment) | Name of Azure environment. | `string` | n/a | yes |
-| <a name="input_location"></a> [location](#input\_location) | Resource location for Azure resources. | `string` | n/a | yes |
-| <a name="input_project"></a> [project](#input\_project) | Project short name. | `string` | n/a | yes |
-| <a name="input_tags"></a> [tags](#input\_tags) | Environment tags. | `map(string)` | n/a | yes |
-
-## Outputs
-
-No outputs.
-<!-- END_TF_DOCS -->
-
-<!-- textlint-enable -->
-<!-- prettier-ignore-end -->
+This repository provides the foundational monitoring and governance infrastructure for the Azure Landing Zone, deploying AMBA policies and RBAC controls across the management group hierarchy.
