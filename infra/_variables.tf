@@ -67,8 +67,3 @@ variable "deploy_amba" {
   default     = false
   description = "Whether to deploy Azure Monitor Baseline Alerts (AMBA) policies and resources."
 }
-
-variable "tenant_id" {
-  type        = string
-  description = "Azure tenant ID. Required for AMBA policy deployment to resolve at plan time."
-}
