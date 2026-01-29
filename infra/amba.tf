@@ -17,7 +17,7 @@ module "alz_architecture" {
 
   architecture_name  = "amba-only"
   location           = var.location
-  parent_resource_id = data.azurerm_client_config.current.tenant_id
+  parent_resource_id = var.tenant_id
   enable_telemetry   = var.enable_telemetry
 
   policy_default_values = {

@@ -8,6 +8,7 @@ project = "sh"
 #########################################
 deploy_amba                = true
 root_management_group_name = "sky-haven"
+tenant_id                  = "bcfa57b3-7ca9-479a-bd62-2d2894d69ee4"
 
 #########################################
 # RBAC
