@@ -2,8 +2,8 @@
   "name": "amba-only",
   "management_groups": [
     {
-      "id": "version-1",
-      "display_name": "Version 1",
+      "id": "sky-haven",
+      "display_name": "Sky Haven",
       "archetypes": ["amba_root"],
       "parent_id": null,
       "exists": true
@@ -12,26 +12,26 @@
       "id": "platform",
       "display_name": "Platform",
       "archetypes": ["amba_platform"],
-      "parent_id": "version-1",
+      "parent_id": "sky-haven",
       "exists": true
     },
     {
       "id": "landing-zones",
       "display_name": "Landing Zones",
       "archetypes": ["amba_landing_zones"],
-      "parent_id": "version-1",
+      "parent_id": "sky-haven",
       "exists": true
     },
     {
       "id": "decommissioned",
       "display_name": "Decommissioned",
-      "parent_id": "version-1",
+      "parent_id": "sky-haven",
       "exists": true
     },
     {
       "id": "sandbox",
       "display_name": "Sandbox",
-      "parent_id": "version-1",
+      "parent_id": "sky-haven",
       "exists": true
     },
     {
