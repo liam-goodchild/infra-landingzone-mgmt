@@ -1,7 +1,7 @@
 module "amba_alz" {
   count   = var.deploy_amba ? 1 : 0
   source  = "Azure/avm-ptn-monitoring-amba-alz/azurerm"
-  version = "0.3.1"
+  version = "0.3.0"
 
   location                            = var.location
   root_management_group_name          = var.root_management_group_name
