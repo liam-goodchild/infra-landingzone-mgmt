@@ -1,0 +1,71 @@
+{
+  "name": "amba-only",
+  "management_groups": [
+    {
+      "id": "sky-haven",
+      "display_name": "Sky Haven",
+      "archetypes": ["amba_root"],
+      "parent_id": null,
+      "exists": true
+    },
+    {
+      "id": "platform",
+      "display_name": "Platform",
+      "archetypes": ["amba_platform"],
+      "parent_id": "sky-haven",
+      "exists": true
+    },
+    {
+      "id": "landing-zones",
+      "display_name": "Landing Zones",
+      "archetypes": ["amba_landing_zones"],
+      "parent_id": "sky-haven",
+      "exists": true
+    },
+    {
+      "id": "decommissioned",
+      "display_name": "Decommissioned",
+      "parent_id": "sky-haven",
+      "exists": true
+    },
+    {
+      "id": "sandbox",
+      "display_name": "Sandbox",
+      "parent_id": "sky-haven",
+      "exists": true
+    },
+    {
+      "id": "connectivity",
+      "display_name": "Connectivity",
+      "archetypes": ["amba_connectivity"],
+      "parent_id": "platform",
+      "exists": true
+    },
+    {
+      "id": "identity",
+      "display_name": "Identity",
+      "archetypes": ["amba_identity"],
+      "parent_id": "platform",
+      "exists": true
+    },
+    {
+      "id": "management",
+      "display_name": "Management",
+      "archetypes": ["amba_management"],
+      "parent_id": "platform",
+      "exists": true
+    },
+    {
+      "id": "security",
+      "display_name": "Security",
+      "parent_id": "platform",
+      "exists": true
+    },
+    {
+      "id": "shared",
+      "display_name": "Shared",
+      "parent_id": "platform",
+      "exists": true
+    }
+  ]
+}

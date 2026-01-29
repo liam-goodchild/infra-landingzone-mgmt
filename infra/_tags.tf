@@ -1,18 +1,18 @@
 locals {
   tags = merge(
     {
-      # Required
+      # Required tags
       Environment  = var.environment == "prd" ? "Prod" : title(var.environment)
-      Criticality  = "PLACEHOLDER"
-      BusinessUnit = "PLACEHOLDER"
-      Owner        = "PLACEHOLDER@PLACEHOLDER.com"
-      CostCenter   = "PLACEHOLDER"
-      Application  = "PLACEHOLDER"
-      OpsTeam      = "PLACEHOLDER"
+      Criticality  = "High"
+      BusinessUnit = "Infrastructure"
+      Owner        = "infrastructure@version1.com"
+      CostCenter   = "Platform"
+      Application  = "Azure-Landing-Zone"
+      OpsTeam      = "Cloud-Operations"
 
-      # Optional
-      Reposiotry = "PLACEHOLDER"
-      Project    = "PLACEHOLDER"
+      # Optional tags
+      Repo    = "caf-tf-az-infra-mgmt"
+      Project = "CAF"
     },
     var.tags
   )
