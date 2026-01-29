@@ -5,8 +5,8 @@ module "amba_alz" {
 
   location                            = var.location
   root_management_group_name          = var.root_management_group_name
-  resource_group_name                 = local.resource_group_name
-  user_assigned_managed_identity_name = local.user_assigned_managed_identity_name
+  resource_group_name                 = "${local.prefix}-alerts-rg-01"
+  user_assigned_managed_identity_name = "${local.prefix}-uami-01"
   tags                                = local.tags
 }
 
@@ -22,10 +22,10 @@ module "alz_architecture" {
 
   policy_default_values = {
     amba_alz_management_subscription_id          = jsonencode({ value = var.management_subscription_id })
-    amba_alz_resource_group_name                 = jsonencode({ value = local.resource_group_name })
+    amba_alz_resource_group_name                 = jsonencode({ value = "${local.prefix}-alerts-rg-01" })
     amba_alz_resource_group_location             = jsonencode({ value = var.location })
     amba_alz_resource_group_tags                 = jsonencode({ value = local.tags })
-    amba_alz_user_assigned_managed_identity_name = jsonencode({ value = local.user_assigned_managed_identity_name })
+    amba_alz_user_assigned_managed_identity_name = jsonencode({ value = "${local.prefix}-uami-01" })
     amba_alz_disable_tag_name                    = jsonencode({ value = var.amba_disable_tag_name })
     amba_alz_disable_tag_values                  = jsonencode({ value = var.amba_disable_tag_values })
     amba_alz_action_group_email                  = jsonencode({ value = var.action_group_emails })

@@ -26,8 +26,3 @@ locals {
 
   distinct_group_names = distinct(local.all_group_names)
 }
-
-locals {
-  resource_group_name                 = "${local.prefix}-alerts-rg-01"
-  user_assigned_managed_identity_name = "${local.prefix}-uami-01"
-}

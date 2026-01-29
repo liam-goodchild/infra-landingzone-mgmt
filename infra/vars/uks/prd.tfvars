@@ -5,8 +5,6 @@ environment = "prd"
 location    = "uksouth"
 
 tags = {
-  Environment = "Prod"
-  Purpose     = "AMBA Monitoring"
 }
 
 #########################################
